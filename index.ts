@@ -1,4 +1,4 @@
-import express, { Request, Response, response } from "express";
+import express, { Request, Response,} from "express";
 import bodyParser from "body-parser";
 
 const app = express();
@@ -37,6 +37,43 @@ app.get('/books', function (req: Request, res: Response) {
         data: books,
         message: "",
     };
+    return res.status(200).json(response);
+});
+
+//Update a book data    --Deniz
+app.put('/books/:id', function (req: Request, res: Response) {
+    const { id } = req.params;
+    const updatedBookData: IBook = req.body;
+
+    const bookIndex = books.findIndex((book: IBook, index: number) => index + 1 === parseInt(id));
+
+    books[bookIndex] = updatedBookData;
+
+        const response: IResponse = {
+            success: true,
+            data: updatedBookData,
+            message: "Book data has been updated",
+        };
+
+    return res.status(200).json(response);
+});
+
+//patch a data
+app.patch('/books/:id', function (req: Request, res: Response) {
+    const { id } = req.params;
+    const updatedBookData: Partial<IBook> = req.body;
+
+    const bookIndex = books.findIndex((book: IBook, index: number) => index + 1 === parseInt(id));
+
+    const bookToUpdate = books[bookIndex];
+    Object.assign(bookToUpdate, updatedBookData);
+
+        const response: IResponse = {
+            success: true,
+            data: updatedBookData,
+            message: "Book data has been patched",
+        };
+
     return res.status(200).json(response);
 });
 
